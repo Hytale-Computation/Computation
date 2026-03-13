@@ -1,4 +1,6 @@
-rootProject.name = "dev.hytalemodding"
+import dev.scaffoldit.hytale.wire.HytaleManifest
+
+rootProject.name = "Computation"
 
 plugins {
     // See documentation on https://scaffoldit.dev
@@ -21,8 +23,12 @@ hytale {
     }
 
     manifest {
-        Group = "HytaleModding"
-        Name = "ExamplePlugin"
-        Main = "dev.hytalemodding.ExamplePlugin"
+        Group = "Computation"
+        Name = "Computation"
+        Main = "io.github.computation.HyComputeExtras"
+        Version = "1.0.0"
+        Description = "The base Computation code and API!"
+        Authors = listOf(HytaleManifest.Author("TechTastic"))
+        Website = "https://github.com/Computation/Computation"
     }
 }
