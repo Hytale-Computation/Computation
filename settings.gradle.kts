@@ -25,7 +25,7 @@ hytale {
     manifest {
         Group = "Computation"
         Name = "Computation"
-        Main = "io.github.computation.HyComputeExtras"
+        Main = "io.github.computation.Computation"
         Version = "1.0.0"
         Description = "The base Computation code and API!"
         Authors = listOf(HytaleManifest.Author("TechTastic"))

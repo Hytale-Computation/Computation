@@ -1,20 +1,18 @@
 {
-    "Group": "HytaleModding",
-    "Name": "ExamplePlugin",
-    "Version": "0.0.0",
-    "Description": "Description of your plugin",
+    "Group": "Computation",
+    "Name": "Computation",
+    "Version": "1.0.0",
+    "Description": "The base Computation code and API!",
     "Authors": [
         {
-            "Name": "Your Name",
-            "Email": "your.email@example.com",
-            "Url": "https://your-website.com"
+            "Name": "TechTastic"
         }
     ],
-    "Website": "https://your-plugin-website.com",
+    "Website": "https://github.com/Computation/Computation",
     "DisabledByDefault": false,
     "IncludesAssetPack": false,
     "Dependencies": {},
     "OptionalDependencies": {},
     "ServerVersion": "*",
-    "Main": "dev.hytalemodding.ExamplePlugin"
+    "Main": "io.github.computation.Computation"
 }
