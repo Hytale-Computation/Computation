@@ -12,7 +12,11 @@
 - `ComputerState`
   - A component used to store the state of a computer
 - `ComputerUI`
-  - A UI system for handling computer input and display.
+  - A UI system for handling computer input and display
+- `APIProvider`
+  - A separate registry for adding new "globals" to computers in their respective languages
+- `Peripheral`
+  - A component for third-party blocks to allow integration with computers
 ### Systems
 - `ComputerTickingSystem`
   - An abstract class meant to be used for handling new per-tick information about computers
