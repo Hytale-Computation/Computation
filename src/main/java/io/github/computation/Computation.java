@@ -1,26 +1,26 @@
 package io.github.computation;
 
-import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import io.github.computation.api.machine.factory.MachineFactory;
-import io.github.computation.commands.ExampleCommand;
-import io.github.computation.component.base.ComputerComponent;
-import io.github.computation.computer.Computer;
-import io.github.computation.events.ExampleEvent;
-import io.github.computation.api.machine.BaseMachine;
-import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import io.github.computation.component.ComputerId;
+import io.github.computation.component.ComputerLanguage;
+import io.github.computation.component.ComputerOn;
+import io.github.computation.systems.ComputerSystems;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class Computation extends JavaPlugin {
     private static Computation INSTANCE;
-    public static HashMap<String, MachineFactory<?>> MACHINES = new HashMap<>();
-    public static HashMap<UUID, Computer> COMPUTERS = new HashMap<>();
+
+    public ComponentType<ChunkStore, ComputerOn.Chunk> computerOnChunkComponentType;
+    public ComponentType<EntityStore, ComputerOn.Entity> computerOnEntityComponentType;
+    public ComponentType<ChunkStore, ComputerId.Chunk> computerIdChunkComponentType;
+    public ComponentType<EntityStore, ComputerId.Entity> computerIdEntityComponentType;
+    public ComponentType<ChunkStore, ComputerLanguage.Chunk> computerLanguageChunkComponentType;
+    public ComponentType<EntityStore, ComputerLanguage.Entity> computerLanguageEntityComponentType;
 
     public Computation(@Nonnull JavaPluginInit init) {
         super(init);
@@ -31,37 +31,18 @@ public class Computation extends JavaPlugin {
         return INSTANCE;
     }
 
-    public static void registerMachine(@NonNullDecl String language, @NonNullDecl MachineFactory<?> machineFactory) {
-        if (MACHINES.containsKey(language))
-            throw new IllegalArgumentException(language + " is already registered!");
-        else
-            MACHINES.put(language, machineFactory);
-    }
-
-    @NonNullDecl
-    public static MachineFactory<?> getMachineFactory(String language) {
-        MachineFactory<?> machine = MACHINES.get(language);
-        if (machine == null)
-            throw new IllegalArgumentException(language + " is not registered!");
-        return machine;
-    }
-
-    public static void addComputer(UUID id, @NonNullDecl Computer computer) {
-        COMPUTERS.put(id, computer);
-    }
-
-    @NullableDecl
-    public static Computer getComputer(UUID id) {
-        return COMPUTERS.get(id);
-    }
-
-    public static void removeComputer(UUID id) {
-        COMPUTERS.remove(id);
-    }
-
     @Override
     protected void setup() {
-        this.getCommandRegistry().registerCommand(new ExampleCommand("example", "An example command"));
-        this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, ExampleEvent::onPlayerReady);
+        this.computerOnChunkComponentType = this.getChunkStoreRegistry().registerComponent(ComputerOn.Chunk.class, "ComputerOn", ComputerOn.Chunk.CODEC);
+        this.computerOnEntityComponentType = this.getEntityStoreRegistry().registerComponent(ComputerOn.Entity.class, "ComputerOn", ComputerOn.Entity.CODEC);
+        this.computerIdChunkComponentType = this.getChunkStoreRegistry().registerComponent(ComputerId.Chunk.class, "ComputerId", ComputerId.Chunk.CODEC);
+        this.computerIdEntityComponentType = this.getEntityStoreRegistry().registerComponent(ComputerId.Entity.class, "ComputerId", ComputerId.Entity.CODEC);
+        this.computerLanguageChunkComponentType = this.getChunkStoreRegistry().registerComponent(ComputerLanguage.Chunk.class, "ComputerLanguage", ComputerLanguage.Chunk.CODEC);
+        this.computerLanguageEntityComponentType = this.getEntityStoreRegistry().registerComponent(ComputerLanguage.Entity.class, "ComputerLanguage", ComputerLanguage.Entity.CODEC);
+
+        this.getChunkStoreRegistry().registerSystem(new ComputerSystems.ChunkSystems.ComputerHolderSystem(this.computerIdChunkComponentType, this.computerLanguageChunkComponentType));
+        this.getEntityStoreRegistry().registerSystem(new ComputerSystems.EntitySystems.ComputerHolderSystem(this.computerIdEntityComponentType, this.computerLanguageEntityComponentType));
+        this.getChunkStoreRegistry().registerSystem(new ComputerSystems.ChunkSystems.ComputerTickingSystem(this.computerOnChunkComponentType, this.computerIdChunkComponentType));
+        this.getEntityStoreRegistry().registerSystem(new ComputerSystems.EntitySystems.ComputerTickingSystem(this.computerOnEntityComponentType, this.computerIdEntityComponentType));
     }
 }

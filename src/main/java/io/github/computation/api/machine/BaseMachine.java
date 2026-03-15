@@ -1,6 +1,5 @@
 package io.github.computation.api.machine;
 
-import io.github.computation.Computation;
 import io.github.computation.computer.Computer;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -12,7 +11,7 @@ import java.util.function.Consumer;
 public abstract class BaseMachine {
     public void start(Computer computer) {}
 
-    public void update(Computer computer, Computer.ComputerEvent[] events) {}
+    public void update(float dt, Computer computer, Computer.ComputerEvent[] events) {}
 
     public void stop(Computer computer) {}
 
